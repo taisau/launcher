@@ -13,8 +13,8 @@ android {
         applicationId "com.tored.bridgelauncher"
         minSdk 24
         targetSdk 34
-        versionCode 9
-        versionName "v9"
+        versionCode 10
+        versionName "v10"
         versionNameSuffix "alpha"
         archivesBaseName = "${applicationId}_${versionCode}_v${versionName}${if (versionNameSuffix?.isAllWhitespace() ?: true) "" else "-${versionNameSuffix}"}"
 

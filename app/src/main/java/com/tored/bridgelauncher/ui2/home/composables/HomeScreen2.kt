@@ -115,6 +115,7 @@ fun HomeScreen2(
                         onCreated = {
                             webView = it
                             it.clearCache(true)
+                            it.post { it.clearHistory() }
                             webViewDeps.onCreated(it)
                         },
                         onDispose = {
