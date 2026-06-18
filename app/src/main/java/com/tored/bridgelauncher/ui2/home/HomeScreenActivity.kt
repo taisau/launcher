@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import com.tored.bridgelauncher.ui2.home.composables.HomeScreen2
@@ -28,6 +29,11 @@ class HomeScreenActivity : ComponentActivity()
         enableEdgeToEdge()
 
         super.onCreate(savedInstanceState)
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() { }
+        })
+
 
         // immediately start another activity for debugging
 //        tryStartBridgeAppDrawerActivity()

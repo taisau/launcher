@@ -2,7 +2,6 @@ package com.tored.bridgelauncher.ui2.home.composables
 
 import android.view.View
 import android.webkit.WebView
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -103,9 +102,6 @@ fun HomeScreen2(
 
                     val canGoBack = webViewNavigator.canGoBack
 
-                    BackHandler(!canGoBack) {
-                        // consume back gesture — do nothing, stay on home screen
-                    }
 
                     WebView(
                         state = webViewState,
@@ -115,7 +111,6 @@ fun HomeScreen2(
                         onCreated = {
                             webView = it
                             it.clearCache(true)
-                            it.post { it.clearHistory() }
                             webViewDeps.onCreated(it)
                         },
                         onDispose = {
