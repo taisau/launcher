@@ -47,5 +47,10 @@ fun onBridgeWebViewCreated(
     webView.addJavascriptInterface(jsToBridgeAPI, "Bridge")
 
     // immediately load the current project
-    webView.loadUrl(BridgeServer.PROJECT_URL)
+    // Posted, not immediate: the Accompanist WebView factory runs onCreated()
+    // BEFORE it attaches webViewClient. Loading synchronously let the first
+    // request go out with the default client, so https://bridge.launcher/ hit
+    // real DNS (net::ERR_NAME_NOT_RESOLVED). The post runs after the factory's
+    // apply block, when BridgeWebViewClient is attached.
+    webView.post { webView.loadUrl(BridgeServer.PROJECT_URL) }
 }

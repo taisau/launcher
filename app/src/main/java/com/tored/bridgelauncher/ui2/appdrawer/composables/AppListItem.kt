@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -33,7 +32,6 @@ import com.tored.bridgelauncher.ui2.appdrawer.IAppDrawerApp
 import com.tored.bridgelauncher.ui2.appdrawer.TestApps
 import com.tored.bridgelauncher.ui2.shared.PreviewWithSurfaceAndPadding
 import com.tored.bridgelauncher.ui2.theme.textSec
-import com.tored.bridgelauncher.utils.tryLaunchApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -48,7 +46,6 @@ fun AppListItem(
     modifier: Modifier = Modifier,
 )
 {
-    val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
 
     Row(
@@ -90,7 +87,6 @@ fun AppListItem(
 
                     onTap = {
                         onTap()
-                        (app as? InstalledApp)?.let { context.tryLaunchApp(it) }
                     },
 
                     onLongPress = { offset ->

@@ -12,11 +12,19 @@ import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tored.bridgelauncher.R
+
+@OptIn(ExperimentalTextApi::class)
+val NationalPark = FontFamily(
+    Font(R.font.national_park, FontWeight.Normal, variationSettings = FontVariation.Settings(FontVariation.weight(700))),
+    Font(R.font.national_park, FontWeight.Bold, variationSettings = FontVariation.Settings(FontVariation.weight(800))),
+)
 
 val FrancoisOne = FontFamily(
     Font(R.font.francois_one),
@@ -33,10 +41,10 @@ val JetBrainsMono = FontFamily(
 
 // Set of Material typography styles to start with
 val Typography = Typography(
-    defaultFontFamily = Signika,
+    defaultFontFamily = NationalPark,
 
     h6 = TextStyle(
-        fontFamily = FrancoisOne,
+        fontFamily = NationalPark,
         fontSize = 20.sp,
         platformStyle = PlatformTextStyle(
             includeFontPadding = false
@@ -44,7 +52,7 @@ val Typography = Typography(
     ),
 
     body1 = TextStyle(
-        fontFamily = Signika,
+        fontFamily = NationalPark,
         fontSize = 16.sp,
         platformStyle = PlatformTextStyle(
             includeFontPadding = false
@@ -52,7 +60,7 @@ val Typography = Typography(
     ),
 
     body2 = TextStyle(
-        fontFamily = Signika,
+        fontFamily = NationalPark,
         fontSize = 12.sp,
         platformStyle = PlatformTextStyle(
             includeFontPadding = false

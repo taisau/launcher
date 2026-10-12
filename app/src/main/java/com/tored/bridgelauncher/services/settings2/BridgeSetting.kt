@@ -50,12 +50,13 @@ data class BridgeSetting<TPreference, TResult>(
 
         fun file(
             key: String,
+            defaultValue: String? = null,
         ): BridgeSetting<String, File?>
         {
             return BridgeSetting(
                 stringPreferencesKey("SettingsState.$key"),
                 resettable = true,
-                read = { it?.let { File(it) } },
+                read = { (it ?: defaultValue)?.let { File(it) } },
                 write = { it?.canonicalPath },
             )
         }

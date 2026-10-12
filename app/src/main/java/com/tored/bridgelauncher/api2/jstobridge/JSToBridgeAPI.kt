@@ -721,7 +721,7 @@ class JSToBridgeAPI(
 
     private fun tryRunInHomescreenContext(showToastIfFailed: Boolean, f: Context.() -> Unit): Boolean
     {
-        return when(val context = homeScreenContext)
+        return when(val context = homeScreenContext ?: webView?.context)
         {
             null -> false.also { if (showToastIfFailed) _app.showErrorToast("homeScreenContext is null") }
             else -> context.tryRun(showToastIfFailed, f)

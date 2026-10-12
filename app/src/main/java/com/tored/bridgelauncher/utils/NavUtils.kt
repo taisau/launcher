@@ -43,13 +43,14 @@ suspend fun Context.suspendTryOrShowErrorToast(action: suspend Context.() -> Uni
 
 // BRIDGE ACTIVITIES
 
-fun Context.startBridgeSettingsActivity() = startActivity(Intent(this, SettingsScreenActivity::class.java))
+fun Context.startBridgeActivity(cls: Class<*>) = startActivity(Intent(this, cls).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+fun Context.startBridgeSettingsActivity() = startBridgeActivity(SettingsScreenActivity::class.java)
 fun Context.tryStartBridgeSettingsActivity() = tryOrShowErrorToast { startBridgeSettingsActivity() }
 
-fun Context.startBridgeAppDrawerActivity() = startActivity(Intent(this, AppDrawerActivity::class.java))
+fun Context.startBridgeAppDrawerActivity() = startBridgeActivity(AppDrawerActivity::class.java)
 fun Context.tryStartBridgeAppDrawerActivity() = tryOrShowErrorToast { startBridgeAppDrawerActivity() }
 
-fun Context.startDevConsoleActivity() = startActivity(Intent(this, DevConsoleActivity::class.java))
+fun Context.startDevConsoleActivity() = startBridgeActivity(DevConsoleActivity::class.java)
 fun Context.tryStartDevConsoleActivity() = tryOrShowErrorToast { startDevConsoleActivity() }
 
 
@@ -75,14 +76,31 @@ fun Context.requestAppUninstall(packageName: String)
 }
 
 fun Context.tryLaunchApp(app: InstalledApp) = tryOrShowErrorToast { launchApp(app) }
-fun Context.launchApp(app: InstalledApp) = launchApp(packageName)
+fun Context.launchApp(app: InstalledApp) = launchApp(app.packageName)
 
 fun Context.tryLaunchApp(packageName: String) = tryOrShowErrorToast { launchApp(packageName) }
 fun Context.launchApp(packageName: String)
 {
+    val query = Intent(Intent.ACTION_MAIN).apply {
+        addCategory(Intent.CATEGORY_LAUNCHER)
+        setPackage(packageName)
+    }
+    val info = packageManager.queryIntentActivities(query, 0).firstOrNull()
+    if (info != null)
+    {
+        startActivity(
+            Intent(Intent.ACTION_MAIN).apply {
+                addCategory(Intent.CATEGORY_LAUNCHER)
+                setClassName(info.activityInfo.packageName, info.activityInfo.name)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        )
+        return
+    }
+
     val intent = packageManager.getLaunchIntentForPackage(packageName)
     if (intent != null)
-        startActivity(intent)
+        startActivity(intent.apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
     else
         throw Exception("Launch intent not found.")
 }
