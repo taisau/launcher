@@ -1,6 +1,8 @@
 package com.tored.bridgelauncher.services.apps
 
+import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.content.pm.LauncherApps
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.compose.runtime.mutableStateMapOf
@@ -33,6 +35,7 @@ sealed interface InstalledAppListChangeEvent
 
 class InstalledAppsHolder(
     private val _pm: PackageManager,
+    private val _launcherApps: LauncherApps,
 )
 {
     private val _coroutineScope = CoroutineScope(Dispatchers.Default) + SupervisorJob()
@@ -118,7 +121,45 @@ class InstalledAppsHolder(
             Log.d(TAG, "loadInstalledApps: forEach took ${ms}ms")
         }
 
+        loadWorkProfileApps()
+    }
 
+    /** Apps that exist only in a managed profile: PackageManager cannot see them, LauncherApps can. */
+    private fun loadWorkProfileApps()
+    {
+        WorkProfileApps.clear()
+
+        try
+        {
+            val me = android.os.Process.myUserHandle()
+            for (profile in _launcherApps.profiles)
+            {
+                if (profile == me) continue
+
+                for (info in _launcherApps.getActivityList(null, profile))
+                {
+                    val packageName = info.applicationInfo.packageName
+                    if (_packageNameToInstalledAppMap.containsKey(packageName) || WorkProfileApps.contains(packageName)) continue
+
+                    WorkProfileApps.put(packageName, WorkProfileApps.Target(info.componentName, profile))
+                    addOrChangeInstalledApp(
+                        InstalledApp(
+                            info.applicationInfo.uid,
+                            packageName,
+                            info.label.toString(),
+                            Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER).setComponent(info.componentName),
+                            info.getBadgedIcon(0),
+                            info.applicationInfo,
+                        ),
+                        isFromInitialLoad = true,
+                    )
+                }
+            }
+        }
+        catch (e: Exception)
+        {
+            Log.w(TAG, "loadWorkProfileApps failed", e)
+        }
     }
 
     private fun addFromAppInfoIfLaunchable(

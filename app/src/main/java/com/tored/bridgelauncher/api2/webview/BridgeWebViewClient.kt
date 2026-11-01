@@ -1,6 +1,7 @@
 package com.tored.bridgelauncher.api2.webview
 
 import android.content.Intent
+import com.tored.bridgelauncher.services.apps.WorkProfileApps
 import android.util.Log
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -98,6 +99,8 @@ class BridgeWebViewClient(
             val packageName = intent.`package`
             if (packageName != null)
             {
+                if (WorkProfileApps.tryLaunch(view.context, packageName)) return true
+
                 val query = Intent(Intent.ACTION_MAIN).apply {
                     addCategory(Intent.CATEGORY_LAUNCHER)
                     setPackage(packageName)

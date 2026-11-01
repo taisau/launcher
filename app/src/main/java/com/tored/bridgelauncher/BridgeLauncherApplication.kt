@@ -3,6 +3,7 @@ package com.tored.bridgelauncher
 import android.app.Application
 import android.app.UiModeManager
 import android.content.ComponentName
+import android.content.pm.LauncherApps
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.tored.bridgelauncher.api2.bridgetojs.BridgeToJSAPI
@@ -59,7 +60,7 @@ class BridgeLauncherApplication : Application()
 
         val permsHolder = PermsHolder(this)
 
-        val installedAppsHolder = InstalledAppsHolder(pm)
+        val installedAppsHolder = InstalledAppsHolder(pm, getSystemService(LauncherApps::class.java))
         val iconPackCache = IconPackCache()
         val appIconsCache = IconCache(pm, installedAppsHolder, iconPackCache)
         val installedIconPacksHolder = InstalledIconPacksHolder(

@@ -3,6 +3,7 @@ package com.tored.bridgelauncher.utils
 import android.app.admin.DevicePolicyManager
 import android.content.Context
 import android.content.Intent
+import com.tored.bridgelauncher.services.apps.WorkProfileApps
 import android.net.Uri
 import android.provider.Settings
 import com.tored.bridgelauncher.services.apps.InstalledApp
@@ -81,6 +82,8 @@ fun Context.launchApp(app: InstalledApp) = launchApp(app.packageName)
 fun Context.tryLaunchApp(packageName: String) = tryOrShowErrorToast { launchApp(packageName) }
 fun Context.launchApp(packageName: String)
 {
+    if (WorkProfileApps.tryLaunch(this, packageName)) return
+
     val query = Intent(Intent.ACTION_MAIN).apply {
         addCategory(Intent.CATEGORY_LAUNCHER)
         setPackage(packageName)
