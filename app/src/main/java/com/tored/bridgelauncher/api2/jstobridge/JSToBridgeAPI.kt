@@ -125,6 +125,19 @@ class JSToBridgeAPI(
     // endregion
 
 
+    // region haptics
+
+    /** System haptic constant (same engine as keyboard typing), so strength follows the user's touch-feedback setting. */
+    @JavascriptInterface
+    fun performHaptic(constant: Int)
+    {
+        val wv = webView ?: return
+        wv.post { wv.performHapticFeedback(constant) }
+    }
+
+    // endregion
+
+
     // region fetch
 
     @JavascriptInterface
